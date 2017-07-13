@@ -49,7 +49,7 @@ class WebhookitHandler(tornado.web.RequestHandler):
             # webhook configs
             config = WEBHOOKIT_CONFIGURE or {}
 
-            event_name = parser.get_event_name(self.request) or ''
+            event_name = parser.get_event_name(self.request, data) or ''
             repo_name = parser.get_repo_name(data) or ''
             repo_branch = parser.get_repo_branch(data) or ''
             webhook_key = '%s/%s' % (repo_name, repo_branch)

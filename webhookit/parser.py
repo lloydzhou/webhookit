@@ -7,8 +7,11 @@ Created on Mar 3, 2017
 
 
 # event name
-def get_event_name(request):
-    return request.headers.get('X-GitHub-Event')
+def get_event_name(request, hook_data):
+    return request.headers.get('X-GitHub-Event') \
+        or request.get('X-Gitlab-Event') \
+        or hook_data.get('hook_name') \
+        or request.get('X-Gogs-Event')
 
 
 # repo name
