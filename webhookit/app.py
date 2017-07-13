@@ -49,9 +49,15 @@ class WebhookitHandler(tornado.web.RequestHandler):
             # webhook configs
             config = WEBHOOKIT_CONFIGURE or {}
 
+            event_name = parser.get_event_name(self.request) or ''
             repo_name = parser.get_repo_name(data) or ''
             repo_branch = parser.get_repo_branch(data) or ''
             webhook_key = '%s/%s' % (repo_name, repo_branch)
+            params = {
+                'event_name': event_name,
+                'repo_name': repo_name,
+                'repo_branch': repo_branch
+            }
             # 需要出发操作的服务器 server 数组
             servers = config.get(webhook_key, [])
             if servers and len(servers) > 0:
@@ -59,6 +65,7 @@ class WebhookitHandler(tornado.web.RequestHandler):
                 cnt = 0
                 for s in servers:
                     # 遍历执行
+                    s['SCRIPT'] = s.get('SCRIPT').format(**params)
                     utils.log('Starting to execute %s' % s.get('SCRIPT', ''))
                     utils.do_webhook_shell(s, data)
                     webhook_cnt += 1

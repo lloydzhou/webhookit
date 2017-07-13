@@ -6,6 +6,11 @@ Created on Mar 3, 2017
 '''
 
 
+# event name
+def get_event_name(request):
+    return request.headers.get('X-GitHub-Event')
+
+
 # repo name
 def get_repo_name(hook_data):
     return hook_data.get('repository', {}).get('name', '') \
